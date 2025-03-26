@@ -1,9 +1,14 @@
-import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
-
+import React from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import Admin from "./pages/Admin";
 
 function App() {
   return (
-    <div>hii</div>
+    <Router>
+      <Routes>
+        <Route path="/admin" element={<Admin />} />
+      </Routes>
+    </Router>
   );
 }
 

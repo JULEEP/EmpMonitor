@@ -1,0 +1,84 @@
+/* Sidebar */
+.sidebar {
+    width: 60px;
+    height: 100vh;
+    background: #f0f0f0; /* Match the Admin page background */
+    color: black; /* Change text color */
+    padding: 10px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    transition: width 0.3s ease-in-out, background 0.3s ease-in-out;
+    overflow-x: hidden;
+    z-index: 1000;
+  }
+  
+  .sidebar.open {
+    width: 220px;
+    background: #1e3c72; /* Sidebar turns blue when expanded */
+    color: white;
+  }
+  
+  .sidebar .toggle-btn {
+    background: none;
+    border: none;
+    color: black; /* Match the sidebar text when collapsed */
+    font-size: 24px;
+    cursor: pointer;
+    margin-bottom: 20px;
+    display: block;
+    transition: color 0.3s;
+  }
+  
+  .sidebar.open .toggle-btn {
+    color: white; /* Button color changes when expanded */
+  }
+  
+  .sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .sidebar ul li {
+    margin: 15px 0;
+    padding: 10px;
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+  }
+  
+  .sidebar.open ul li {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  
+  .sidebar ul li a {
+    color: black; /* Match admin page */
+    text-decoration: none;
+    font-size: 16px;
+    display: block;
+    padding: 10px;
+    border-radius: 5px;
+    transition: background 0.3s, color 0.3s;
+  }
+  
+  .sidebar.open ul li a {
+    color: white;
+  }
+  
+  .sidebar ul li a:hover {
+    background: rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Content Area */
+  .content {
+    margin-left: 60px;
+    padding: 20px;
+    transition: margin-left 0.3s ease-in-out;
+  }
+  
+  .content.shifted {
+    margin-left: 220px;
+  }
+  
