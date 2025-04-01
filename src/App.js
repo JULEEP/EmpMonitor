@@ -4,6 +4,7 @@ import Admin from "./pages/Admin";
 import AuthForm from "./components/auth";
 import ProductivityGrid from "./components/Productivity/ProductivityReport";
 import Emp from "./components/emp/emp";
+import TimesheetPage from "./components/timesheet/timesheet";
 
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
         <Route path="/Auth" element={< AuthForm/>} />
         <Route path="/productivity" element={< ProductivityGrid/>} />
         <Route path="/emp" element={< Emp/>} />
+        <Route path="/timesheet" element={< TimesheetPage/>} />
       </Routes>
     </Router>
   );
