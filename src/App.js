@@ -4,7 +4,6 @@ import Admin from "./pages/Admin";
 import AuthForm from "./components/auth";
 import ProductivityGrid from "./components/Productivity/ProductivityReport";
 
-
 function App() {
   return (
     <Router>
@@ -12,7 +11,6 @@ function App() {
         <Route path="/admin" element={<Admin />} />
         <Route path="/Auth" element={< AuthForm/>} />
         <Route path="/productivity" element={< ProductivityGrid/>} />
-     
       </Routes>
     </Router>
   );
