@@ -6,8 +6,6 @@ import ProductivityGrid from "./components/Productivity/ProductivityReport";
 import ScreenshotGallery from "./components/Screenshots/ScreenshotsGallery";
 import ScreenshotsGrid from "./components/Screenshots/ScreenshotsGallery";
 
-
-
 function App() {
   return (
     <Router>
@@ -15,7 +13,11 @@ function App() {
         <Route path="/admin" element={<Admin />} />
         <Route path="/Auth" element={<AuthForm />} />
         <Route path="/productivity" element={<ProductivityGrid />} />
-        <Route path="/screenshots" element={<ScreenshotsGrid />} /> {/* Add this new route */}
+        <Route path="/screenshots" element={<ScreenshotsGrid />} />{" "}
+        {/* Add this new route */}
+        =======
+        <Route path="/Auth" element={<AuthForm />} />
+        <Route path="/productivity" element={<ProductivityGrid />} />
       </Routes>
     </Router>
   );
