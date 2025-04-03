@@ -6,9 +6,13 @@ import {
   FiBell,
   FiChevronLeft,
   FiChevronRight,
+  FiImage,
+  FiVideo,
+  FiDownload,
+  FiMaximize,
 } from "react-icons/fi";
 
-const ProductivityGrid = () => {
+const ScreenshotsGrid = () => {
   // State for storing user data
   const [users] = useState([
     { id: 1, name: "A Rami", color: "bg-red-500", avatarText: "AR" },
@@ -59,25 +63,31 @@ const ProductivityGrid = () => {
     })}-${date.getFullYear()}`;
   };
 
-  // Generate random time entries for each user and date
-  const generateTimeEntries = () => {
+  // Generate random screenshot data for each user and date
+  const generateScreenshotData = () => {
     const entries = {};
 
     users.forEach((user) => {
       entries[user.id] = {};
       dates.forEach((date) => {
         const dateKey = formatDate(date);
-        const randomizer = Math.random();
-        const duration = randomizer < 0.1 ? 0 : Math.floor(randomizer * 540);
-        const targetDuration = 480;
+        const randomCount = Math.floor(Math.random() * 5); // 0-4 screenshots
+        const hasVideo = Math.random() > 0.7; // 30% chance of having a video
 
         entries[user.id][dateKey] = {
-          duration,
-          targetDuration,
-          percentCompleted:
-            duration === 0
-              ? 0
-              : Math.min(100, Math.round((duration / targetDuration) * 100)),
+          count: randomCount,
+          hasVideo,
+          screenshots: Array(randomCount)
+            .fill(null)
+            .map((_, i) => ({
+              id: `${user.id}-${dateKey}-${i}`,
+              time: `${Math.floor(Math.random() * 24)}:${Math.floor(
+                Math.random() * 60
+              )
+                .toString()
+                .padStart(2, "0")}`,
+              type: Math.random() > 0.8 ? "video" : "image", // 20% chance of being a video
+            })),
         };
       });
     });
@@ -85,15 +95,8 @@ const ProductivityGrid = () => {
     return entries;
   };
 
-  // State for storing time entries
-  const [timeEntries] = useState(generateTimeEntries());
-
-  // Convert minutes to "Xh Ym" format
-  const formatDuration = (minutes) => {
-    const hours = Math.floor(minutes / 60);
-    const mins = minutes % 60;
-    return `${hours}h ${mins}m`;
-  };
+  // State for storing screenshot data
+  const [screenshotData] = useState(generateScreenshotData());
 
   // State for week navigation and filters
   const [weekOffset, setWeekOffset] = useState(0);
@@ -118,24 +121,19 @@ const ProductivityGrid = () => {
   // State for view mode (day/week)
   const [view, setView] = useState("week");
 
-  // Render a time cell with progress bar
-  const renderTimeCell = (userId, date) => {
-    const dateKey = formatDate(date);
-    const entry = timeEntries[userId][dateKey];
+  // State for modal
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedScreenshot, setSelectedScreenshot] = useState(null);
 
-    if (!entry || entry.duration === 0) {
+  // Render a screenshot cell
+  const renderScreenshotCell = (userId, date) => {
+    const dateKey = formatDate(date);
+    const entry = screenshotData[userId][dateKey];
+
+    if (!entry || entry.count === 0) {
       return (
-        <div className="w-full">
-          <div className="text-xs text-gray-400 italic mb-1">no time</div>
-          <div className="h-5 bg-gray-200 rounded-full overflow-hidden mb-1">
-            <div
-              className="h-full bg-lime-500 rounded-full"
-              style={{ width: "0%" }}
-            ></div>
-          </div>
-          <div className="text-xs text-gray-400">
-            To do: {formatDuration(480)}
-          </div>
+        <div className="w-full h-full flex items-center justify-center text-gray-400 italic">
+          no screenshots
         </div>
       );
     }
@@ -143,16 +141,51 @@ const ProductivityGrid = () => {
     return (
       <div className="w-full">
         <div className="text-xs text-gray-500 mb-1">
-          {formatDuration(entry.duration)}
+          {entry.count} {entry.count === 1 ? "screenshot" : "screenshots"}
+          {entry.hasVideo && (
+            <span className="ml-1 text-blue-500">
+              <FiVideo className="inline" size={12} />
+            </span>
+          )}
         </div>
-        <div className="h-5 bg-gray-200 rounded-full overflow-hidden mb-1">
-          <div
-            className="h-full bg-lime-500 rounded-full transition-all duration-300"
-            style={{ width: `${entry.percentCompleted}%` }}
-          ></div>
-        </div>
-        <div className="text-xs text-gray-400">
-          To do: {formatDuration(entry.targetDuration)}
+        <div className="grid grid-cols-2 gap-1">
+          {entry.screenshots.slice(0, 4).map((screenshot) => (
+            <div
+              key={screenshot.id}
+              className="relative aspect-square bg-gray-100 rounded overflow-hidden cursor-pointer hover:opacity-90"
+              onClick={() => {
+                setSelectedScreenshot({
+                  user: users.find((u) => u.id === userId),
+                  date: dateKey,
+                  ...screenshot,
+                });
+                setModalOpen(true);
+              }}
+            >
+              {screenshot.type === "video" ? (
+                <div className="w-full h-full flex items-center justify-center bg-blue-50 text-blue-500">
+                  <FiVideo size={16} />
+                </div>
+              ) : (
+                <div className="w-full h-full flex items-center justify-center bg-gray-50 text-gray-500">
+                  <FiImage size={16} />
+                </div>
+              )}
+              <div className="absolute bottom-0 left-0 right-0 bg-black/50 text-white text-xs p-0.5 text-center truncate">
+                {screenshot.time}
+              </div>
+              {screenshot.type === "video" && (
+                <div className="absolute top-0 right-0 bg-blue-500 text-white p-0.5 rounded-bl text-xs">
+                  <FiVideo size={10} />
+                </div>
+              )}
+            </div>
+          ))}
+          {entry.count > 4 && (
+            <div className="relative aspect-square bg-gray-100 rounded overflow-hidden flex items-center justify-center text-gray-500 text-xs">
+              +{entry.count - 4} more
+            </div>
+          )}
         </div>
       </div>
     );
@@ -218,13 +251,13 @@ const ProductivityGrid = () => {
         <button className="px-4 py-3 border-b-2 border-transparent hover:border-gray-300 text-gray-500">
           Timesheet
         </button>
-        <button className="px-4 py-3 border-b-2 border-blue-600 text-blue-600 font-medium">
+        <button className="px-4 py-3 border-b-2 border-transparent hover:border-gray-300 text-gray-500">
           Productivity
         </button>
         <button className="px-4 py-3 border-b-2 border-transparent hover:border-gray-300 text-gray-500">
           Timeline
         </button>
-        <button className="px-4 py-3 border-b-2 border-transparent hover:border-gray-300 text-gray-500">
+        <button className="px-4 py-3 border-b-2 border-blue-600 text-blue-600 font-medium">
           Screenshots
         </button>
         <button className="px-4 py-3 border-b-2 border-transparent hover:border-gray-300 text-gray-500">
@@ -330,7 +363,7 @@ const ProductivityGrid = () => {
         </div>
       </div>
 
-      {/* Main productivity grid */}
+      {/* Main screenshots grid */}
       <div className="flex-1 overflow-auto bg-white">
         <div className="flex sticky top-0 bg-white z-10 shadow-sm">
           <div className="w-44 p-2 font-semibold text-gray-500 border-r border-b border-gray-200 flex-shrink-0">
@@ -364,7 +397,7 @@ const ProductivityGrid = () => {
                   key={index}
                   className="w-36 p-2 border-r border-gray-200 flex-shrink-0"
                 >
-                  {renderTimeCell(user.id, date)}
+                  {renderScreenshotCell(user.id, date)}
                 </div>
               ))}
             </div>
@@ -375,14 +408,84 @@ const ProductivityGrid = () => {
       {/* Footer with export button */}
       <div className="bg-blue-800 text-white p-4 flex justify-between items-center">
         <div className="text-xl font-bold tracking-wide">
-          WEEKLY PRODUCTIVITY REPORTS
+          WEEKLY SCREENSHOTS REPORTS
         </div>
         <button className="px-4 py-2 bg-white text-blue-800 font-semibold rounded hover:bg-gray-100 transition-colors">
           Export
         </button>
       </div>
+
+      {/* Screenshot Modal */}
+      {modalOpen && selectedScreenshot && (
+        <div className="fixed inset-0 bg-black/75 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] flex flex-col">
+            <div className="p-4 border-b border-gray-200 flex justify-between items-center">
+              <div>
+                <h3 className="font-semibold text-lg">
+                  {selectedScreenshot.user.name}
+                </h3>
+                <p className="text-gray-500 text-sm">
+                  {selectedScreenshot.date} at {selectedScreenshot.time}
+                </p>
+              </div>
+              <div className="flex gap-2">
+                <button className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded">
+                  <FiDownload size={18} />
+                </button>
+                <button className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded">
+                  <FiMaximize size={18} />
+                </button>
+                <button
+                  className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded"
+                  onClick={() => setModalOpen(false)}
+                >
+                  ×
+                </button>
+              </div>
+            </div>
+            <div className="flex-1 overflow-auto flex items-center justify-center bg-gray-100 p-8">
+              {selectedScreenshot.type === "video" ? (
+                <div className="w-full aspect-video bg-blue-50 flex items-center justify-center text-blue-500">
+                  <div className="text-center">
+                    <FiVideo size={48} className="mx-auto mb-4" />
+                    <p>Video Recording</p>
+                    <p className="text-sm text-gray-500 mt-2">
+                      {selectedScreenshot.time}
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                <div className="w-full h-full bg-gray-50 flex items-center justify-center text-gray-500">
+                  <div className="text-center">
+                    <FiImage size={48} className="mx-auto mb-4" />
+                    <p>Screenshot</p>
+                    <p className="text-sm text-gray-500 mt-2">
+                      {selectedScreenshot.time}
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
+            <div className="p-4 border-t border-gray-200 flex justify-between items-center">
+              <div className="text-sm text-gray-500">
+                {selectedScreenshot.type === "video"
+                  ? "Video recording"
+                  : "Screenshot"}
+              </div>
+              <div className="flex gap-2">
+                <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                  Approve
+                </button>
+                <button className="px-4 py-2 bg-red-100 text-red-600 rounded hover:bg-red-200">
+                  Flag
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
-export default ProductivityGrid;
+export default ScreenshotsGrid;
