@@ -5,6 +5,7 @@ import AuthForm from "./components/auth";
 import ProductivityGrid from "./components/Productivity/ProductivityReport";
 import Summary from "./components/Summary";
 import Detailedview from "./components/Detailedview";
+=======
 
 function App() {
   return (
@@ -16,6 +17,8 @@ function App() {
         <Route path="/summary" element={< Summary/>} />
         <Route path="/detailedview" element={< Detailedview/>} />
      
+=======
+>>>>>>> Stashed changes
       </Routes>
     </Router>
   );

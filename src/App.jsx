@@ -7,7 +7,6 @@ import ScreenshotGallery from "./components/Screenshots/ScreenshotsGallery";
 import ScreenshotsGrid from "./components/Screenshots/ScreenshotsGallery";
 import Summaary from './components/Summary'
 import Emp from "./components/emp/emp";
-import TimesheetPage from "./components/timesheet/timesheet";
 
 function App() {
   return (
@@ -16,15 +15,18 @@ function App() {
         <Route path="/admin" element={<Admin />} />
         <Route path="/Auth" element={<AuthForm />} />
         <Route path="/productivity" element={<ProductivityGrid />} />
+        {/* <Route path="/Auth" element={<AuthForm />} />
+        <Route path="/productivity" element={<ProductivityGrid />} /> */}
         <Route path="/screenshots" element={<ScreenshotsGrid />} />{" "}
         <Route path="/summary" element={<Summaary />} />
         <Route path="/emp" element={<Emp />} />
-        <Route path="/timesheet" element={<TimesheetPage />} />
 
         {/* Add this new route */}
         =======
+        {/* ======= */}
         <Route path="/Auth" element={<AuthForm />} />
         <Route path="/productivity" element={<ProductivityGrid />} />
+        <Route path="/timesheet" element={<TimeSheet />} />
       </Routes>
     </Router>
   );
