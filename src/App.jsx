@@ -3,10 +3,12 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Admin from "./pages/Admin";
 import AuthForm from "./components/auth";
 import ProductivityGrid from "./components/Productivity/ProductivityReport";
-import ScreenshotGallery from "./components/Screenshots/ScreenshotsGallery";
+
 import ScreenshotsGrid from "./components/Screenshots/ScreenshotsGallery";
 import Summaary from './components/Summary'
 import Emp from "./components/emp/emp";
+
+import Dashboard from "./components/Dashboard/Dashboard";
 
 function App() {
   return (
