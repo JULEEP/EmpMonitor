@@ -12,7 +12,6 @@ import {
 import gsap from "gsap";
 
 function EmployeeForm() {
-  // Form state
   const [isSignUp, setIsSignUp] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
@@ -28,14 +27,11 @@ function EmployeeForm() {
   });
   const [mobileError, setMobileError] = useState("");
 
-  // Refs for animations
   const formRef = useRef(null);
   const formContainerRef = useRef(null);
 
-  // Initialize animations
   useEffect(() => {
     if (formRef.current) {
-      // Animate form elements on initial load
       gsap.from(
         formRef.current.querySelectorAll('input, button[type="submit"]'),
         {
@@ -48,7 +44,6 @@ function EmployeeForm() {
         }
       );
 
-      // Animate header elements
       gsap.from(formRef.current.querySelectorAll("h2, p"), {
         y: -20,
         opacity: 0,
@@ -58,7 +53,6 @@ function EmployeeForm() {
     }
   }, []);
 
-  // Form input handler
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
 
@@ -67,18 +61,15 @@ function EmployeeForm() {
     } else {
       setFormData({ ...formData, [name]: value });
 
-      // Clear any previous mobile error
       if (name === "mobile") {
         setMobileError("");
       }
     }
 
-    // Update password strength if password field changes
     if (name === "password") {
       updatePasswordStrength(value);
     }
 
-    // Animate the input field when focused
     const inputElement = e.target;
     gsap.to(inputElement, {
       scale: 1.02,
@@ -89,7 +80,6 @@ function EmployeeForm() {
     });
   };
 
-  // Password strength calculator
   const updatePasswordStrength = (password) => {
     let score = 0;
 
@@ -106,7 +96,6 @@ function EmployeeForm() {
     setPasswordStrength({ score, label });
   };
 
-  // Mobile number validation
   const validateMobile = () => {
     const mobileRegex = /^(\+\d{1,3})?\s?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/;
     if (!formData.mobile) {
@@ -119,17 +108,14 @@ function EmployeeForm() {
     return true;
   };
 
-  // Form submission handler
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Validate only if on signup form
     if (isSignUp) {
       const mobileValid = validateMobile();
       if (!mobileValid) return;
     }
 
-    // Animate submit button
     const submitButton = e.target.querySelector('button[type="submit"]');
     gsap.to(submitButton, {
       scale: 0.95,
@@ -138,15 +124,13 @@ function EmployeeForm() {
       yoyo: true,
       repeat: 1,
       onComplete: () => {
-        // Show success animation
         gsap.to(submitButton, {
-          backgroundColor: "#10b981", // Green color
+          backgroundColor: "#10b981",
           duration: 0.3,
           ease: "power2.out",
           onComplete: () => {
-            // Reset button color after delay
             gsap.to(submitButton, {
-              backgroundColor: "#4f46e5", // Back to indigo
+              backgroundColor: "#4f46e5",
               duration: 0.3,
               delay: 1,
               ease: "power2.out",
@@ -160,9 +144,7 @@ function EmployeeForm() {
     alert(isSignUp ? "Account Created!" : "Signed In!");
   };
 
-  // Form toggle handler
   const toggleForm = () => {
-    // First animate out current form
     gsap.to(formRef.current.querySelectorAll('input, button[type="submit"]'), {
       y: 10,
       opacity: 0,
@@ -170,7 +152,6 @@ function EmployeeForm() {
       duration: 0.3,
       ease: "power2.in",
       onComplete: () => {
-        // Switch form type
         setIsSignUp(!isSignUp);
         setFormData({
           mobile: "",
@@ -181,7 +162,6 @@ function EmployeeForm() {
         });
         setPasswordStrength({ score: 0, label: "weak" });
 
-        // Then animate in new form after state update
         setTimeout(() => {
           gsap.to(
             formRef.current.querySelectorAll('input, button[type="submit"]'),
@@ -199,11 +179,9 @@ function EmployeeForm() {
     });
   };
 
-  // Password visibility toggle
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
 
-    // Animate the eye icon
     const eyeIcon = document.querySelector(".password-toggle");
     gsap.to(eyeIcon, {
       rotate: showPassword ? 0 : 360,
@@ -217,14 +195,11 @@ function EmployeeForm() {
       className="min-h-screen flex flex-col md:flex-row"
       ref={formContainerRef}
     >
-      {/* Left side with form */}
       <div className="w-full md:w-1/2 flex items-center justify-center bg-gradient-to-br from-slate-50 to-indigo-50 p-6">
         <div className="w-full max-w-md">
           <div className="bg-white rounded-2xl shadow-xl overflow-hidden relative border border-gray-300">
-            {/* Decorative top bar */}
             <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-indigo-600 via-purple-500 to-pink-500"></div>
 
-            {/* Tab navigation */}
             <nav className="flex text-sm font-medium border-b">
               <button
                 type="button"
@@ -251,7 +226,6 @@ function EmployeeForm() {
             </nav>
 
             <div className="p-8">
-              {/* Title Section */}
               <div className="text-center mb-8">
                 <h2 className="text-3xl font-bold mb-2 text-slate-900">
                   {isSignUp ? "Create Account" : "Welcome Back"}
@@ -263,7 +237,6 @@ function EmployeeForm() {
                 </p>
               </div>
 
-              {/* Social Login Buttons */}
               <div className="flex flex-col space-y-4 mb-6">
                 <button
                   type="button"
@@ -294,11 +267,9 @@ function EmployeeForm() {
                 <div className="flex-grow border-t border-gray-300"></div>
               </div>
 
-              {/* Form */}
               <form ref={formRef} onSubmit={handleSubmit}>
                 {isSignUp && (
                   <>
-                    {/* Mobile Number Field */}
                     <div className="mb-4">
                       <label className="flex items-center mb-2 text-sm font-medium text-gray-800">
                         <FaPhone className="mr-2 text-gray-600" />
@@ -325,7 +296,6 @@ function EmployeeForm() {
                       )}
                     </div>
 
-                    {/* Full Name Field */}
                     <div className="mb-4">
                       <label className="flex items-center mb-2 text-sm font-medium text-gray-800">
                         <FaUser className="mr-2 text-gray-600" />
@@ -346,7 +316,6 @@ function EmployeeForm() {
                   </>
                 )}
 
-                {/* Email Field */}
                 <div className="mb-4">
                   <label className="flex items-center mb-2 text-sm font-medium text-gray-800">
                     <FaEnvelope className="mr-2 text-gray-600" />
@@ -365,7 +334,6 @@ function EmployeeForm() {
                   </div>
                 </div>
 
-                {/* Password Field */}
                 <div className="mb-4">
                   <label className="flex items-center mb-2 text-sm font-medium text-gray-800">
                     <FaLock className="mr-2 text-gray-600" />
@@ -390,7 +358,6 @@ function EmployeeForm() {
                     </button>
                   </div>
 
-                  {/* Password Strength Meter (only on signup) */}
                   {isSignUp && (
                     <div className="mt-2">
                       <div className="flex justify-between mb-1">
@@ -472,7 +439,6 @@ function EmployeeForm() {
                 </div>
 
                 {!isSignUp ? (
-                  // Remember me and Forgot password (only on sign in)
                   <div className="flex justify-between items-center mb-6">
                     <div className="flex items-center">
                       <input
@@ -495,7 +461,6 @@ function EmployeeForm() {
                     </a>
                   </div>
                 ) : (
-                  // Terms checkbox (only on sign up)
                   <div className="flex items-start mb-6">
                     <div className="flex items-center h-5">
                       <input
@@ -529,7 +494,6 @@ function EmployeeForm() {
                   </div>
                 )}
 
-                {/* Submit Button */}
                 <button
                   type="submit"
                   className="w-full py-3 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 shadow-md"
@@ -538,7 +502,6 @@ function EmployeeForm() {
                 </button>
               </form>
 
-              {/* Form toggle for mobile */}
               <p className="text-center mt-6 text-sm text-gray-700 md:hidden">
                 {isSignUp
                   ? "Already have an account? "
@@ -556,11 +519,9 @@ function EmployeeForm() {
         </div>
       </div>
 
-      {/* Right side with hero section */}
       <div className="hidden md:flex md:w-1/2 bg-gradient-to-r from-indigo-600 to-violet-500 flex-col items-center justify-center text-white p-12 relative overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0">
           <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-indigo-800/90 to-violet-700/80 z-10"></div>
-          {/* Background pattern */}
           <svg
             className="absolute top-0 left-0 w-full h-full opacity-10 z-0"
             viewBox="0 0 100 100"
