@@ -23,10 +23,6 @@ function App() {
         <Route path="/screenshots" element={<ScreenshotsGrid />} />{" "}
         <Route path="/summary" element={<Summaary />} />
         <Route path="/emp" element={<Emp />} />
-<<<<<<< HEAD
-        <Route path="/timesheet" element={<TimesheetPage />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-=======
 
         {/* Add this new route */}
         {/* ======= */}
@@ -34,7 +30,7 @@ function App() {
         <Route path="/Auth" element={<AuthForm />} />
         <Route path="/productivity" element={<ProductivityGrid />} />
         <Route path="/timesheet" element={<TimeSheet />} />
->>>>>>> 3a047e455eeded89abc5e9db9fe6009d0a6aca61
+        <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
     </Router>
   );
