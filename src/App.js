@@ -8,8 +8,7 @@ import Detailedview from "./components/Detailedview";
 import TimeSheet from "./components/timesheet/timesheet";
 import Dashboard from "./components/Dashboard/Dashboard";
 import EmployeeForm from "./components/Employee/auth/EmployeeForm";
-
-import EmployeeDashboard from "./components/Dashboard/EmployeeDashboard";
+import EmployeeProjects from "./components/Dashboard/EmployeeProjects";
 // =======
 
 function App() {
@@ -24,7 +23,7 @@ function App() {
         <Route path="/timesheet" element={< TimeSheet />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/eAuth" element={<EmployeeForm />} />
-        <Route path="/eDash" element={<EmployeeDashboard />} />
+        <Route path="/eProjects" element={<EmployeeProjects />} />
 
 =======
 {/* >>>>>>> Stashed changes */}
